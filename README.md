@@ -1,3 +1,5 @@
+1) переименовать .env.example в .env
+
 ## Запуск локально
 
 1) Ставим бд: docker-compose up mysql
