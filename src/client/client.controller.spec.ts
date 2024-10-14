@@ -4,6 +4,7 @@ import { ClientService } from './client.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { CreateClientResponseDTO } from './dto/CreateClientResponseDTO';
 import { CreateClientRequestDTO } from './dto/CreateClientRequestDTO';
+import { LoggerModule } from '../logger/logger.module';
 
 describe('ClientController', () => {
   let controller: ClientController;
@@ -51,6 +52,7 @@ describe('ClientController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [LoggerModule],
       controllers: [ClientController],
       providers: [{ provide: ClientService, useValue: clientServiceMock }]
     }).compile();

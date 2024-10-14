@@ -5,6 +5,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { CreateTaskResponseDTO } from './dto/CreateTaskResponseDTO';
 import { CreateTaskRequestDTO } from './dto/CreateTaskRequestDTO';
 import { TaskStatusEnum } from './enums/taskStatusEnum';
+import { LoggerModule } from '../logger/logger.module';
 
 describe('TaskController', () => {
   let controller: TaskController;
@@ -55,6 +56,7 @@ describe('TaskController', () => {
   };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [LoggerModule],
       controllers: [TaskController],
       providers: [{ provide: TaskService, useValue: taskServiceMock }]
     }).compile();
