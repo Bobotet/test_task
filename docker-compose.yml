@@ -1,9 +1,24 @@
 services:
   mysql:
     container_name: mysql
-    image: mysql:8.0
+    build:
+      context: ./config/mysql
+      dockerfile: Dockerfile
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - ${MYSQL_PORT}:${MYSQL_PORT}
+
+  app:
+    container_name: app
+    restart: always
+    build:
+      context: .
+      dockerfile: ./config/app/Dockerfile
+    depends_on:
+      - mysql
+    environment:
+      - MYSQL_HOST=mysql
+    ports:
+      - ${APP_PORT}:${APP_PORT}
