@@ -2,7 +2,8 @@
 
 1) Ставим бд: docker-compose up mysql
 2) Заливаем миграции: npm run migration:run
-3) Запускаем сервер: npm run start
+3) npm i
+4) Запускаем сервер: npm run start
 
 
 ## Запуск внутри докера
