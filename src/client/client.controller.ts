@@ -8,18 +8,17 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query,
-  Res
+  Query
 } from '@nestjs/common';
-import { CreateClientDTO } from './dto/CreateClientDTO';
+import { CreateClientRequestDTO } from './dto/CreateClientRequestDTO';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ClientService } from './client.service';
-import { Response } from 'express';
 import { GetClientsParamsDTO } from './dto/GetClientsParamsDTO';
 import { UpdateClientRequestDTO } from './dto/UpdateClientRequestDTO';
+import { CreateClientResponseDTO } from './dto/CreateClientResponseDTO';
 
 @Controller('client')
-@ApiTags('clients')
+@ApiTags('client')
 @ApiResponse({
   status: HttpStatus.BAD_REQUEST,
   example: {
@@ -35,34 +34,31 @@ export class ClientController {
   @ApiOperation({ summary: 'Create client' })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    type: CreateClientDTO
+    type: CreateClientResponseDTO
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
     example: {
-      statusCode: 409,
+      statusCode: HttpStatus.CONFLICT,
       message: 'User with this email or phone is already registered'
     }
   })
-  async createClient(@Body() body: CreateClientDTO, @Res() res: Response) {
+  async createClient(@Body() body: CreateClientRequestDTO) {
     const newClient = await this.clientService.createClient(body);
-    res.status(HttpStatus.CREATED).send(newClient);
+    return newClient;
   }
 
   @Get('')
   @ApiOperation({ summary: 'Get all clients' })
-  @ApiResponse({ status: HttpStatus.OK, type: [CreateClientDTO] })
-  async getAllClients(
-    @Res() res: Response,
-    @Query() params: GetClientsParamsDTO
-  ) {
+  @ApiResponse({ status: HttpStatus.OK, type: [CreateClientResponseDTO] })
+  async getAllClients(@Query() params: GetClientsParamsDTO) {
     const clients = await this.clientService.getAllClients(params);
-    res.status(HttpStatus.CREATED).send(clients);
+    return clients;
   }
 
   @Get('/:id')
   @ApiOperation({ summary: 'Get client by id' })
-  @ApiResponse({ status: HttpStatus.OK, type: CreateClientDTO })
+  @ApiResponse({ status: HttpStatus.OK, type: CreateClientResponseDTO })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     example: {
@@ -70,17 +66,14 @@ export class ClientController {
       message: 'There are no clients with this id: 2'
     }
   })
-  async getClient(
-    @Res() res: Response,
-    @Param('id', new ParseIntPipe()) clientId: number
-  ) {
+  async getClient(@Param('id', new ParseIntPipe()) clientId: number) {
     const client = await this.clientService.getClientById(clientId);
-    res.status(HttpStatus.OK).send(client);
+    return client;
   }
 
   @Patch('/:id')
   @ApiOperation({ summary: 'Update client by id' })
-  @ApiResponse({ status: HttpStatus.OK, type: CreateClientDTO })
+  @ApiResponse({ status: HttpStatus.OK, type: CreateClientResponseDTO })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     example: {
@@ -89,7 +82,6 @@ export class ClientController {
     }
   })
   async updateClient(
-    @Res() res: Response,
     @Body() body: UpdateClientRequestDTO,
     @Param('id', new ParseIntPipe()) clientId: number
   ) {
@@ -97,7 +89,7 @@ export class ClientController {
       clientId,
       body
     );
-    res.status(HttpStatus.OK).send(updatedClient);
+    return updatedClient;
   }
 
   @Delete('/:id')
@@ -110,11 +102,8 @@ export class ClientController {
       message: 'There are no clients with this id: 2'
     }
   })
-  async deleteClient(
-    @Res() res: Response,
-    @Param('id', new ParseIntPipe()) clientId: number
-  ) {
+  async deleteClient(@Param('id', new ParseIntPipe()) clientId: number) {
     await this.clientService.deleteClientById(clientId);
-    res.status(HttpStatus.NO_CONTENT).send();
+    return;
   }
 }

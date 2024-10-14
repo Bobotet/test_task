@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateClientDTO } from './dto/CreateClientDTO';
+import { CreateClientRequestDTO } from './dto/CreateClientRequestDTO';
 import { DataSource } from 'typeorm';
 import { GetClientsParamsDTO } from './dto/GetClientsParamsDTO';
 import { SqlErrorCodeEnum } from '../database/enums/sqlErrorCodesEnum';
@@ -8,7 +8,7 @@ import { UpdateClientRequestDTO } from './dto/UpdateClientRequestDTO';
 @Injectable()
 export class ClientService {
   constructor(private readonly dataSource: DataSource) {}
-  async createClient(body: CreateClientDTO) {
+  async createClient(body: CreateClientRequestDTO) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
 
@@ -29,8 +29,9 @@ export class ClientService {
       return newClient;
     } catch (error) {
       await queryRunner.query('ROLLBACK');
-      switch (error.code) {
-        case SqlErrorCodeEnum.ER_DUP_ENTRY:
+
+      switch (error.errno) {
+        case SqlErrorCodeEnum.DUPLICATE_ENTRY_ERROR:
           throw new HttpException(
             'User with this email or phone is already registered',
             HttpStatus.CONFLICT
@@ -115,8 +116,8 @@ export class ClientService {
       return updateClientQuery[0];
     } catch (error) {
       await queryRunner.query('ROLLBACK');
-      switch (error.code) {
-        case SqlErrorCodeEnum.ER_DUP_ENTRY:
+      switch (error.errno) {
+        case SqlErrorCodeEnum.DUPLICATE_ENTRY_ERROR:
           throw new HttpException(
             'User with this email or phone is already registered',
             HttpStatus.CONFLICT

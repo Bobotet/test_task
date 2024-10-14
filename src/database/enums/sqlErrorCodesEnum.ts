@@ -1,3 +1,4 @@
 export enum SqlErrorCodeEnum {
-  'ER_DUP_ENTRY' = 'ER_DUP_ENTRY'
+  'DUPLICATE_ENTRY_ERROR' = 1062,
+  'FOREIGN_KEY_ERROR' = 1452
 }
