@@ -20,12 +20,12 @@ export class LoggingInterceptor implements NestInterceptor {
 
     const originalSend = response.send;
 
-    response.send = (responseBody: object) => {
+    response.send = (responseBody: string) => {
       this.myLogger.logApi({
         path,
         method,
         request: request.body,
-        response: responseBody,
+        response: JSON.parse(responseBody),
         duration: new Date().getTime() - startTime + ' ms'
       });
 
