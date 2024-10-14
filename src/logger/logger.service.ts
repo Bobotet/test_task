@@ -4,21 +4,13 @@ import * as path from 'node:path';
 
 @Injectable()
 export class MyLogger implements LoggerService {
-  private readonly requestLogsPath: string = path.join(
+  private readonly logsPath: string = path.join(
     __dirname,
     '..',
     '..',
     '..',
     'logs',
-    'requests.log'
-  );
-  private readonly responseLogsPath: string = path.join(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    'logs',
-    'responses.log'
+    'logs.log'
   );
   private readonly errorLogsPath: string = path.join(
     __dirname,
@@ -28,24 +20,13 @@ export class MyLogger implements LoggerService {
     'logs',
     'errors.log'
   );
-  logResponse(message: any) {
+  logApi(message: any) {
     fs.appendFile(
-      this.responseLogsPath,
+      this.logsPath,
       JSON.stringify(message) + `\n`,
       (error: any) => {
         if (error) {
-          console.error('Error in log response: ' + error);
-        }
-      }
-    );
-  }
-  logRequest(message: any) {
-    fs.appendFile(
-      this.requestLogsPath,
-      JSON.stringify(message) + `\n`,
-      (error: any) => {
-        if (error) {
-          console.error('Error in log request: ' + error);
+          console.error('Error in log: ' + error);
         }
       }
     );
