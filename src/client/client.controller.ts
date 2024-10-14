@@ -8,7 +8,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query
+  Query,
+  UseInterceptors
 } from '@nestjs/common';
 import { CreateClientRequestDTO } from './dto/CreateClientRequestDTO';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -16,7 +17,9 @@ import { ClientService } from './client.service';
 import { GetClientsParamsDTO } from './dto/GetClientsParamsDTO';
 import { UpdateClientRequestDTO } from './dto/UpdateClientRequestDTO';
 import { CreateClientResponseDTO } from './dto/CreateClientResponseDTO';
+import { LoggingInterceptor } from '../logger/logger.interceptor';
 
+@UseInterceptors(LoggingInterceptor)
 @Controller('client')
 @ApiTags('client')
 @ApiResponse({

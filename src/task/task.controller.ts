@@ -8,7 +8,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query
+  Query,
+  UseInterceptors
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -16,7 +17,9 @@ import { CreateTaskRequestDTO } from './dto/CreateTaskRequestDTO';
 import { CreateTaskResponseDTO } from './dto/CreateTaskResponseDTO';
 import { GetTasksParamsDTO } from './dto/GetTasksParamsDTO';
 import { UpdateTaskRequestDTO } from './dto/UpdateTaskRequestDTO';
+import { LoggingInterceptor } from '../logger/logger.interceptor';
 
+@UseInterceptors(LoggingInterceptor)
 @Controller('task')
 @ApiTags('task')
 @ApiResponse({

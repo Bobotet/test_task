@@ -3,11 +3,12 @@ import { AppModule } from './app/app.module';
 import * as process from 'node:process';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { MyLogger } from './logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
-
+  app.useLogger(new MyLogger());
   const config = new DocumentBuilder()
     .setTitle('API')
     .setDescription('API description')
