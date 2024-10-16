@@ -25,7 +25,7 @@ export class LoggingInterceptor implements NestInterceptor {
         path,
         method,
         request: request.body,
-        response: JSON.parse(responseBody),
+        response: responseBody ? JSON.parse(responseBody) : {},
         duration: new Date().getTime() - startTime + ' ms'
       });
 
